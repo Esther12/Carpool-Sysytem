@@ -1,0 +1,7 @@
+com/tongchen/carpool/service/impl/RequestServiceImplTest.class
+com/tongchen/carpool/dao/BillDaoTest.class
+com/tongchen/carpool/service/impl/BillServiceImplTest.class
+com/tongchen/carpool/service/impl/UserServiceTest.class
+com/tongchen/carpool/dao/UserDaoTest.class
+com/tongchen/carpool/dao/RequestDaoTest.class
+com/tongchen/carpool/dao/CarDaoTest.class

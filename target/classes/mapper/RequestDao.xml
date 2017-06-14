@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tongchen.carpool.dao.RequestDao">
+    <select id="getRequestOfDriver" resultType="Request">
+        SELECT request_id, begin_place, end_place, price, begin_time, r.user_id "user.user_id",user_name "user.user_name",user_tele "user.user_tele", r.create_time
+        FROM  request r,user
+        <where>
+            (SELECT user_identity FROM user where user.user_id=r.user_id)=0 AND request_status = 1 AND user.user_id=r.user_id
+        </where>
+        ORDER  BY create_time DESC
+    </select>
+    <select id="getRequestOfPassenger" resultType="Request">
+        SELECT request_id, begin_place, end_place, price, begin_time, r.user_id "user.user_id",user_name "user.user_name",user_tele "user.user_tele", r.create_time
+        FROM  request r,user
+        <where>
+            (SELECT user_identity FROM user where user.user_id=r.user_id)=1 AND request_status = 1
+        </where>
+        ORDER  BY create_time DESC
+    </select>
+    <select id="getMyRequest" resultType="Request">
+       SELECT request_id, begin_place, end_place, price,request_status, begin_time, user_id "user.user_id", create_time
+        FROM  request
+        WHERE user_id=#{userId}
+    </select>
+    <select id="getRequestById" resultType="Request">
+        SELECT request_id, begin_place, end_place, price,request_status, begin_time, request.user_id "user.user_id", user.user_name "user.user_name",user_tele "user.user_tele",request.create_time,car_type "car.car_type"
+        FROM  request,user,car
+        WHERE request_id=#{requestId} AND user.user_id= car.user_id AND request.user_id=user.user_id
+    </select>
+    <insert id="insertNewRequest" >
+        INSERT ignore INTO  request(begin_place,end_place, price, begin_time, user_id)
+        VALUES (#{beginPlace},#{endPlace},#{price},#{beginTime},#{user.userId})
+    </insert>
+    <update id="cancelRequest">
+        UPDATE request SET request_status = 0
+        <where>
+            request_id = #{requestId}
+        </where>
+    </update>
+    <update id="fullRequest">
+        UPDATE request SET request_status = 2
+        <where>
+            request_id = #{requestId}
+        </where>
+    </update>
+    <update id="renewRequest">
+        UPDATE request SET request_status = 1
+        <where>
+            request_id =(SELECT request_id FROM bill where bill_id=#{billId})
+        </where>
+    </update>
+</mapper>
