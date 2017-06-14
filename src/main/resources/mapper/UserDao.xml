@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tongchen.carpool.dao.UserDao">
+    <insert id="insertUserInfo">
+<!--       ignore 表示插入时如果主键冲突，忽略 -->
+      INSERT ignore INTO  user(user_name,user_password,user_tele,user_identity)
+      VALUES (#{userName},#{userPassword},#{userTele},#{userIdentity})
+    </insert>
+    <select id="checkUser" resultType="int">
+        SELECT count(1) FROM user
+        <where>
+            user_name = #{userName} OR user_tele = #{userTele}
+        </where>
+    </select>
+    <select id="userLogin" resultType="User">
+        SELECT user_id,user_name,user_identity,user_tele FROM user
+        <where>
+            user_name=#{userName} and user_password = #{userPassword}
+        </where>
+    </select>
+</mapper>
